@@ -1,0 +1,71 @@
+{
+  "" : {
+    "const-values" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/CacadorEstelar-primary.swiftconstvalues",
+    "dependencies" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/CacadorEstelar-primary.d",
+    "diagnostics" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/CacadorEstelar-primary.dia",
+    "emit-module-dependencies" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/CacadorEstelar-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/CacadorEstelar-primary-emit-module.dia",
+    "pch" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/CacadorEstelar-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/CacadorEstelar-primary.swiftdeps"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/App.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/App.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/App.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/App.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Cena3D/Pecas.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Pecas.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Pecas.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Pecas.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Cena3D/Renderizador.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Renderizador.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Renderizador.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Renderizador.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Cena3D/Texturas.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Texturas.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Texturas.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Texturas.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Cena3D/VisaoEspacial.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/VisaoEspacial.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/VisaoEspacial.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/VisaoEspacial.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/HUD/Componentes.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Componentes.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Componentes.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Componentes.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/HUD/PainelComando.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/PainelComando.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/PainelComando.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/PainelComando.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/HUD/PainelTelemetria.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/PainelTelemetria.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/PainelTelemetria.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/PainelTelemetria.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Modelo/Busca.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Busca.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Busca.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Busca.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Modelo/Grade.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Grade.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Grade.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Grade.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Modelo/JogoModel.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/JogoModel.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/JogoModel.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/JogoModel.o"
+  },
+  "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/Sources/CacadorEstelar/Modelo/Mapas.swift" : {
+    "index-unit-output-path" : "/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Mapas.o",
+    "llvm-bc" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Mapas.bc",
+    "object" : "/Users/macbook/Documents/if/ads/period6/data-structure/CacadorEstelar/.build/out/Intermediates.noindex/CacadorEstelar.build/Release/CacadorEstelar-p.build/Objects-normal/arm64/Mapas.o"
+  }
+}
