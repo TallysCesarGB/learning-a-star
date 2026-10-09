@@ -95,6 +95,8 @@ struct Metricas {
     var maxFronteira = 0
     var custoOtimo: Double?
     var celulasHostis = 0
+    var zem: Double?
+    var tgo: Double?
 
     /// custo ótimo / custo encontrado (1.0 = rota perfeita).
     var eficiencia: Double? {
@@ -217,6 +219,7 @@ final class JogoModel: ObservableObject {
     @Published var densidade: Double = 0.28
     @Published var camera: ModoCamera = .orbital
     @Published var somAtivo = true
+    @Published var guiagem: Guiagem = .zem
 
     // Mundo
     @Published var grade: Grade
@@ -233,6 +236,10 @@ final class JogoModel: ObservableObject {
     @Published var duelo: Duelo?
     @Published var dueloPasso = 0
     @Published var impactos = 0
+    /// Onde a navegação proporcional prevê que o mensageiro estará (marcador 3D).
+    @Published var previsto: Pos?
+    @Published var comparativo: ComparativoGuiagem?
+    @Published var comparando = false
 
     // Estado e gamificação
     @Published var fase: Fase = .parado
@@ -247,6 +254,8 @@ final class JogoModel: ObservableObject {
 
     private var tarefa: Task<Void, Never>?
     private var orcamentoPresa = 0.0
+    private var estimador = EstimadorAlvo(presa: Pos(r: 0, c: 0))
+    private var gerador = SystemRandomNumberGenerator()
     private var mapaAlterado = false
     private let limitePassos = 1500
 
@@ -366,6 +375,7 @@ final class JogoModel: ObservableObject {
         predador = inicio
         presa = alvo
         metricas = Metricas()
+        previsto = nil
         fase = .parado
     }
 
@@ -384,6 +394,7 @@ final class JogoModel: ObservableObject {
         parar()
         limparVisual()
         orcamentoPresa = 0
+        estimador = EstimadorAlvo(presa: alvo)
         mapaAlterado = false
         if modo == .classico {
             metricas.custoOtimo = custoOtimoReferencia()
@@ -405,8 +416,22 @@ final class JogoModel: ObservableObject {
     private func executar() async {
         var primeira = true
         while !Task.isCancelled {
-            let r = Buscador.buscar(grade, de: predador, ate: presa, algoritmo: algoritmo,
+            var destino = presa
+            if modo == .fuga && guiagem == .antecipada && !primeira {
+                let custoMedio = metricas.passos > 0 ? metricas.custoPercorrido / Double(metricas.passos) : 2
+                destino = NavegacaoProporcional.calcularMira(grade, predador: predador, presa: presa,
+                                                            estimador: estimador, custoMedio: custoMedio,
+                                                            diagonal: diagonal)
+            }
+            var r = Buscador.buscar(grade, de: predador, ate: destino, algoritmo: algoritmo,
                                     heuristica: heuristica, diagonal: diagonal)
+            if !r.encontrou && destino != presa {
+                // Mira prevista sem rota (bolsão fechado): volta a mirar no alvo.
+                metricas.nosExplorados += r.nosExplorados
+                metricas.tempoMs += r.tempoMs
+                r = Buscador.buscar(grade, de: predador, ate: presa, algoritmo: algoritmo,
+                                    heuristica: heuristica, diagonal: diagonal)
+            }
             metricas.tempoMs += r.tempoMs
             metricas.maxFronteira = max(metricas.maxFronteira, r.maxFronteira)
 
@@ -520,15 +545,32 @@ final class JogoModel: ObservableObject {
             case .fuga:
                 orcamentoPresa += custo
                 var moveu = false
-                while orcamentoPresa >= 4 {
-                    orcamentoPresa -= 4
-                    moverPresa()
+                while orcamentoPresa >= Fuga.custoPorSalto {
+                    orcamentoPresa -= Fuga.custoPorSalto
+                    presa = Fuga.proximaPosicao(grade, presa: presa, predador: predador, rng: &gerador)
                     moveu = true
                     if presa == predador { return .capturou }
                 }
-                if moveu {
-                    mensagem = "O mensageiro mudou de vetor. Recalculando."
-                    return .replanejar
+                // Retroalimentação: mede o alvo a cada salto e atualiza a velocidade estimada.
+                estimador.observar(presa, tempo: metricas.custoPercorrido)
+
+                if guiagem == .pura {
+                    if moveu {
+                        mensagem = "O mensageiro mudou de vetor. Recalculando."
+                        return .replanejar
+                    }
+                } else if caminho.count > 1 {
+                    let leitura = NavegacaoProporcional.medir(
+                        grade, presa: presa, estimador: estimador,
+                        destino: caminho[caminho.count - 1],
+                        custoRestante: NavegacaoProporcional.custoRestante(grade, caminho))
+                    metricas.zem = leitura.zem
+                    metricas.tgo = leitura.tgo
+                    previsto = leitura.previsto
+                    if leitura.comando > ParametrosPN.limiar {
+                        mensagem = "ZEM de \(leitura.zem.fmt1) células: corrigindo a rota."
+                        return .replanejar
+                    }
                 }
             case .meteoros:
                 if metricas.passos % 5 == 0, chuvaDeMeteoros() {
@@ -538,21 +580,6 @@ final class JogoModel: ObservableObject {
             }
         }
         return predador == presa ? .capturou : .replanejar
-    }
-
-    private func moverPresa() {
-        let opcoes = grade.vizinhos(de: presa, diagonal: false).map { $0.pos }
-        guard !opcoes.isEmpty else { return }
-        func distancia(_ p: Pos) -> Int { abs(p.r - predador.r) + abs(p.c - predador.c) }
-        if Double.random(in: 0..<1) < 0.75 {
-            // Foge maximizando a distância; no empate prefere setor barato.
-            presa = opcoes.max { a, b in
-                let da = distancia(a), db = distancia(b)
-                return da == db ? grade[a].custo > grade[b].custo : da < db
-            }!
-        } else {
-            presa = opcoes.randomElement()!
-        }
     }
 
     /// Derruba meteoros; retorna true se algum caiu na rota restante.
@@ -581,7 +608,8 @@ final class JogoModel: ObservableObject {
     private func finalizar(sucesso: Bool) {
         tarefa = nil
         registrar(RegistroCorrida(
-            algoritmo: algoritmo, heuristica: heuristica, modo: modo.rawValue,
+            algoritmo: algoritmo, heuristica: heuristica,
+            modo: modo == .fuga ? "\(modo.rawValue) · \(guiagem.rawValue)" : modo.rawValue,
             nos: metricas.nosExplorados, tempoMs: metricas.tempoMs,
             custo: sucesso ? metricas.custoPercorrido : nil,
             eficiencia: metricas.eficiencia, sucesso: sucesso))
@@ -596,6 +624,30 @@ final class JogoModel: ObservableObject {
         if metricas.celulasHostis >= 10 { desbloquear(.cascoChamuscado) }
         if modo == .fuga { desbloquear(.cacadorRecompensas) }
         if modo == .meteoros { desbloquear(.sobrevivente) }
+    }
+
+    // MARK: Comparativo de guiagem
+
+    /// Roda as três guiagens no setor atual, sem animação, fora da thread principal.
+    func compararGuiagens(rodadas: Int = 30) {
+        guard !comparando else { return }
+        parar()
+        limparVisual()
+        comparando = true
+        mensagem = "Simulando \(rodadas) perseguições por guiagem neste setor..."
+        let g = grade, i = inicio, a = alvo
+        let alg = algoritmo, h = heuristica, d = diagonal
+        Task { [weak self] in
+            let resultado = await Task.detached(priority: .userInitiated) {
+                ComparativoGuiagem.calcular(g, inicio: i, alvo: a, algoritmo: alg,
+                                            heuristica: h, diagonal: d, rodadas: rodadas)
+            }.value
+            guard let self else { return }
+            self.comparativo = resultado
+            self.comparando = false
+            self.mensagem = "Comparativo pronto: \(rodadas) rodadas por guiagem, mesmo setor e mesmas sementes."
+            self.tocar("Hero")
+        }
     }
 
     // MARK: Duelo
