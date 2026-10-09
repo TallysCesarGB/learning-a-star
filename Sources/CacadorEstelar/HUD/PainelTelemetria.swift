@@ -11,6 +11,9 @@ struct PainelTelemetria: View {
                 } else {
                     telemetria
                 }
+                if let c = jogo.comparativo {
+                    comparativo(c)
+                }
                 conquistas
                 registro
             }
@@ -18,6 +21,63 @@ struct PainelTelemetria: View {
         }
         .vidroHUD(jogo.fase.cor)
     }
+
+
+/// Uma métrica do comparativo: uma barra por guiagem e a variação em relação à pura.
+struct LinhaGuiagem: View {
+    let titulo: String
+    let c: ComparativoGuiagem
+    var maiorMelhor = false
+    let valor: (ComparativoGuiagem.Resumo) -> Double
+    let texto: (Double) -> String
+
+    var body: some View {
+        let valores = Guiagem.allCases.map { g in c.resumos[g].map(valor) ?? 0 }
+        let maximo = max(valores.max() ?? 0, 0.000001)
+        let base = valores.first ?? 0
+        return VStack(alignment: .leading, spacing: 4) {
+            Text(titulo)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(Color.hudFraco)
+            ForEach(Array(Guiagem.allCases.enumerated()), id: \.element) { k, g in
+                barra(valores[k] / maximo, cor: g.cor, rotulo: texto(valores[k]),
+                      variacao: k == 0 ? nil : variacao(valores[k], base))
+            }
+        }
+    }
+
+    private func variacao(_ v: Double, _ base: Double) -> (String, Bool)? {
+        guard base > 0 else { return nil }
+        let pct = (v - base) / base * 100
+        let melhor = maiorMelhor ? pct > 0.5 : pct < -0.5
+        return (String(format: "%+.0f%%", pct), melhor)
+    }
+
+    private func barra(_ fracao: Double, cor: Color, rotulo: String, variacao: (String, Bool)?) -> some View {
+        HStack(spacing: 6) {
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Color.white.opacity(0.06))
+                    Capsule()
+                        .fill(LinearGradient(colors: [cor.opacity(0.6), cor], startPoint: .leading, endPoint: .trailing))
+                        .frame(width: max(3, geo.size.width * CGFloat(fracao)))
+                        .shadow(color: cor.opacity(0.7), radius: 4)
+                }
+            }
+            .frame(height: 7)
+            Text(rotulo)
+                .font(.hud(10, .semibold))
+                .monospacedDigit()
+                .foregroundStyle(Color.hudTexto)
+                .frame(width: 62, alignment: .trailing)
+            Text(variacao?.0 ?? "")
+                .font(.hud(9, .bold))
+                .monospacedDigit()
+                .foregroundStyle(variacao?.1 == true ? Color.hudVerde : Color.hudFraco)
+                .frame(width: 34, alignment: .trailing)
+        }
+    }
+}
 
     // MARK: Telemetria ao vivo
 
@@ -48,6 +108,13 @@ struct PainelTelemetria: View {
                            simbolo: "square.stack.3d.up.fill", cor: .hudOuro)
                 LeituraHUD(titulo: "Custo ótimo", valor: m.custoOtimo.map { $0.fmt1 } ?? "--",
                            simbolo: "checkmark.seal.fill", cor: .hudVerde)
+                
+                if jogo.modo == .fuga && jogo.guiagem.usaZEM {
+                    LeituraHUD(titulo: "ZEM (células)", valor: m.zem.map { $0.fmt1 } ?? "--",
+                               simbolo: "scope", cor: Color(nsColor: Paleta.magenta))
+                    LeituraHUD(titulo: "t_go (custo)", valor: m.tgo.map { $0.fmt1 } ?? "--",
+                               simbolo: "hourglass", cor: Color(nsColor: Paleta.magenta))
+                }
             }
         }
     }
@@ -97,6 +164,44 @@ struct PainelTelemetria: View {
                     .padding(10)
                     .background(RoundedRectangle(cornerRadius: 9).fill(Color.white.opacity(0.04)))
             }
+        }
+    }
+
+    // MARK: Comparativo de guiagem
+
+    private func comparativo(_ c: ComparativoGuiagem) -> some View {
+        SecaoHUD(titulo: "Comparativo de guiagem", simbolo: "chart.bar.xaxis") {
+            HStack(alignment: .top) {
+                Text("\(c.rodadas) perseguições por guiagem neste setor, mesmas sementes. \(c.configuracao).")
+                    .font(.system(size: 10))
+                    .foregroundStyle(Color.hudFraco)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 4)
+                Button { jogo.comparativo = nil } label: {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Color.hudFraco)
+            }
+
+            HStack(spacing: 6) {
+                ForEach(Guiagem.allCases) { g in
+                    Chip(g.rawValue, cor: g.cor)
+                }
+            }
+
+            LinhaGuiagem(titulo: "Taxa de captura", c: c, maiorMelhor: true,
+                         valor: { $0.taxaCaptura }, texto: { String(format: "%.0f%%", $0 * 100) })
+            LinhaGuiagem(titulo: "Custo percorrido", c: c,
+                         valor: { $0.custo }, texto: { $0.fmt1 })
+            LinhaGuiagem(titulo: "Saltos", c: c,
+                         valor: { $0.passos }, texto: { $0.fmt1 })
+            LinhaGuiagem(titulo: "Replanejamentos", c: c,
+                         valor: { $0.replanejamentos }, texto: { $0.fmt1 })
+            LinhaGuiagem(titulo: "Nós explorados", c: c,
+                         valor: { $0.nos }, texto: { String(format: "%.0f", $0) })
+            LinhaGuiagem(titulo: "Tempo de busca", c: c,
+                         valor: { $0.tempoMs }, texto: { String(format: "%.2f ms", $0) })
         }
     }
 

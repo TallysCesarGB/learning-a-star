@@ -108,11 +108,11 @@ enum Texturas {
         }
     }
 
-    /// Moldura branca usada como cursor de seleção.
-    static func cursor() -> NSImage {
+    /// Moldura de mira (cantoneiras). Branca no cursor de seleção, colorida no ponto previsto.
+    static func cursor(cor: NSColor = .white) -> NSImage {
         criar(128, 128) { ctx, w, h in
             ctx.clear(CGRect(x: 0, y: 0, width: w, height: h))
-            ctx.setStrokeColor(CGColor(gray: 1, alpha: 1))
+            ctx.setStrokeColor(cor.cgColor)
             ctx.setLineWidth(6)
             let t: CGFloat = 34
             let m: CGFloat = 6
