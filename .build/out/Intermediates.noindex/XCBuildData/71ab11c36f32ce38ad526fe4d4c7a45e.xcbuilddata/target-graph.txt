@@ -1,2 +1,0 @@
-Target dependency graph (1 target)
-Target 'CacadorEstelar-product' in project 'CacadorEstelar' (no dependencies)
