@@ -138,12 +138,57 @@ struct PainelComando: View {
                         .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(ativo ? Color.hudOuro.opacity(0.6) : Color.clear, lineWidth: 1))
                         .contentShape(Rectangle())
                     }
-                    .buttonStyle(.plain)
+                   .buttonStyle(.plain)
                 }
+            }
+
+            if jogo.modo == .fuga {
+                guiagem
             }
         }
         .disabled(jogo.fase.ativa)
         .opacity(jogo.fase.ativa ? 0.55 : 1)
+    }
+
+    // MARK: Guiagem (só no modo Perseguição)
+
+    private var guiagem: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Guiagem do caçador")
+                .font(.hud(10, .bold))
+                .foregroundStyle(Color.hudTexto.opacity(0.85))
+
+            Picker("", selection: $jogo.guiagem) {
+                ForEach(Guiagem.allCases) { g in
+                    Text(g.rawValue).tag(g)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+
+            HStack(alignment: .top, spacing: 6) {
+                Image(systemName: jogo.guiagem.simbolo)
+                    .foregroundStyle(jogo.guiagem.cor)
+                Text(jogo.guiagem.descricao)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .font(.system(size: 10))
+            .foregroundStyle(Color.hudFraco)
+
+            Button { jogo.compararGuiagens() } label: {
+                if jogo.comparando {
+                    HStack(spacing: 6) {
+                        ProgressView().controlSize(.small)
+                        Text("Simulando...")
+                    }
+                } else {
+                    Label("Comparar guiagens", systemImage: "chart.bar.xaxis")
+                }
+            }
+            .buttonStyle(BotaoHUD(cor: Color(nsColor: Paleta.magenta)))
+            .disabled(jogo.comparando)
+        }
+        .padding(.top, 4)
     }
 
     // MARK: Ferramenta de terreno

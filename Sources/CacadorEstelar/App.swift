@@ -116,6 +116,10 @@ struct BarraSuperior: View {
                      cor: admissivel ? .hudVerde : .hudOuro)
                 Chip(jogo.diagonal ? "8 direções" : "4 direções", cor: .hudFraco)
                 Chip(jogo.modo.rawValue, simbolo: jogo.modo.simbolo, cor: .hudOuro)
+                
+                if jogo.modo == .fuga {
+                    Chip(jogo.guiagem.rawValue, simbolo: jogo.guiagem.simbolo, cor: jogo.guiagem.cor)
+                }
             }
         }
         .padding(.leading, 76)
