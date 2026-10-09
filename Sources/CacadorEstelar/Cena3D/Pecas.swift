@@ -300,6 +300,8 @@ final class Biblioteca {
     let pontoRastro: SCNGeometry
     let cursor: SCNGeometry
     let onda: SCNGeometry
+    let mira: SCNGeometry
+    let linhaZEM: SCNGeometry
 
     init() {
         let n = SCNSphere(radius: 0.55)
@@ -337,6 +339,14 @@ final class Biblioteca {
         let o = SCNTorus(ringRadius: 0.5, pipeRadius: 0.04)
         o.materials = [Materiais.brilho(Paleta.verde)]
         onda = o
+        let mp = SCNPlane(width: 1.3, height: 1.3)
+        mp.materials = [Materiais.holograma(Texturas.cursor(cor: Paleta.magenta), aditivo: true)]
+        mira = mp
+
+        let lz = SCNCylinder(radius: 0.03, height: 1)
+        lz.radialSegmentCount = 8
+        lz.materials = [Materiais.brilho(Paleta.magenta)]
+        linhaZEM = lz
     }
 
     func placa(_ t: Terreno) -> SCNGeometry {

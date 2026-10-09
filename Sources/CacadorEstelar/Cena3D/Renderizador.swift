@@ -14,6 +14,9 @@ final class Renderizador: NSObject {
     private let rastroNo = SCNNode()
     private let efeitos = SCNNode()
     private let cursorNo = SCNNode()
+    private let miraNo = SCNNode()
+    private let zemPivo = SCNNode()
+    private let zemSeg = SCNNode()
     private var moldura = SCNNode()
     private var base = SCNNode()
     private let lib = Biblioteca()
@@ -130,6 +133,22 @@ final class Renderizador: NSObject {
         for n in [predador.no, presa.no, farolA, farolB] {
             cena.rootNode.addChildNode(n)
         }
+        // Marcador da navegação proporcional: posição prevista do mensageiro
+        // e a linha do ZEM (do fim da rota até a previsão).
+        let placaMira = SCNNode(geometry: lib.mira)
+        placaMira.eulerAngles.x = -.pi / 2
+        placaMira.castsShadow = false
+        miraNo.addChildNode(placaMira)
+        miraNo.isHidden = true
+        miraNo.runAction(.repeatForever(.rotateBy(x: 0, y: .pi * 2, z: 0, duration: 4)))
+        cena.rootNode.addChildNode(miraNo)
+
+        zemSeg.geometry = lib.linhaZEM
+        zemSeg.eulerAngles.x = .pi / 2
+        zemSeg.castsShadow = false
+        zemPivo.addChildNode(zemSeg)
+        zemPivo.isHidden = true
+        cena.rootNode.addChildNode(zemPivo)
     }
 
     private func montarMoldura() {
@@ -215,6 +234,7 @@ final class Renderizador: NSObject {
         atualizarRastro(j)
         atualizarFarois(j)
         atualizarNaves(j)
+        atualizarPrevisao(j)
 
         if j.fase != faseAnterior {
             if j.fase == .capturou { explodir(em: j.presa) }
@@ -505,6 +525,33 @@ final class Renderizador: NSObject {
                                    duration: min(duracao, 0.22), usesShortestUnitArc: true))
         }
         no.runAction(.group(acoes), forKey: "mover")
+    }
+
+    // MARK: Previsão da navegação proporcional
+
+    @MainActor
+    private func atualizarPrevisao(_ j: JogoModel) {
+        guard let p = j.previsto, j.fase.ativa, linhas > 0 else {
+            miraNo.isHidden = true
+            zemPivo.isHidden = true
+            return
+        }
+        var v = mundoPos(p)
+        v.y = 0.2
+        miraNo.position = v
+        miraNo.isHidden = false
+
+        guard let fim = j.caminho.last, fim != p else {
+            zemPivo.isHidden = true
+            return
+        }
+        let a = mundoPos(fim)
+        let dx = v.x - a.x
+        let dz = v.z - a.z
+        zemPivo.position = SCNVector3((a.x + v.x) / 2, 0.3, (a.z + v.z) / 2)
+        zemPivo.eulerAngles.y = atan2(dx, dz)
+        zemSeg.scale = SCNVector3(1, (dx * dx + dz * dz).squareRoot(), 1)
+        zemPivo.isHidden = false
     }
 
     // MARK: Efeitos
